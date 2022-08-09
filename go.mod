@@ -15,10 +15,11 @@ require (
 	github.com/rusq/dlog v1.3.3
 	github.com/rusq/osenv/v2 v2.0.1
 	github.com/rusq/secure v0.0.3
+	github.com/rusq/structedit v0.0.1
 	github.com/rusq/tracer v1.0.1
 	github.com/schollz/progressbar/v3 v3.8.6
 	github.com/slack-go/slack v0.11.0
-	github.com/stretchr/testify v1.7.1
+	github.com/stretchr/testify v1.8.0
 	golang.org/x/time v0.0.0-20220722155302-e5dcc9cfc0b9
 )
 
@@ -38,7 +39,7 @@ require (
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/rivo/uniseg v0.3.1 // indirect
 	golang.org/x/crypto v0.0.0-20220722155217-630584e8d5aa // indirect
-	golang.org/x/sys v0.0.0-20220803195053-6e608f9ce704 // indirect
+	golang.org/x/sys v0.0.0-20220804214406-8e32c043e418 // indirect
 	golang.org/x/term v0.0.0-20220722155259-a9ba230a4035 // indirect
 	golang.org/x/text v0.3.7 // indirect
 	gopkg.in/square/go-jose.v2 v2.6.0 // indirect

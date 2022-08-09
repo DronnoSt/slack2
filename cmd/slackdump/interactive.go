@@ -11,38 +11,50 @@ import (
 	"github.com/rusq/slackdump/v2/internal/app"
 	"github.com/rusq/slackdump/v2/internal/app/ui"
 	"github.com/rusq/slackdump/v2/internal/structures"
+	"github.com/rusq/structedit"
 )
 
-var errExit = errors.New("exit")
+var (
+	errExit     = errors.New("exit")
+	errContinue = errors.New("continue")
+)
 
 func Interactive(p *params) error {
-	mode := &survey.Select{
-		Message: "What would you like to do?",
-		Options: []string{"Dump", "Export", "List", "Exit"},
-		Description: func(value string, index int) string {
-			descr := []string{
-				"save a list of conversations",
-				"save the workspace or conversations in Slack Export format",
-				"list conversations or users on the screen",
-				"exit Slackdump and return to OS",
-			}
-			return descr[index]
-		},
-	}
-	var resp string
-	if err := survey.AskOne(mode, &resp); err != nil {
-		return err
-	}
 	var err error
-	switch resp {
-	case "Exit":
-		err = errExit
-	case "Dump":
-		err = surveyDump(p)
-	case "Export":
-		err = surveyExport(p)
-	case "List":
-		err = surveyList(p)
+	for {
+		mode := &survey.Select{
+			Message: "What would you like to do?",
+			Options: []string{"Dump", "Export", "List", "Options...", "Exit"},
+			Description: func(value string, index int) string {
+				descr := []string{
+					"save a list of conversations",
+					"save the workspace or conversations in Slack Export format",
+					"list conversations or users on the screen",
+					"set session options",
+					"exit Slackdump and return to OS",
+				}
+				return descr[index]
+			},
+		}
+		var resp string
+		if err := survey.AskOne(mode, &resp); err != nil {
+			return err
+		}
+		switch resp {
+		case "Exit":
+			err = errExit
+		case "Dump":
+			err = surveyDump(p)
+		case "Export":
+			err = surveyExport(p)
+		case "List":
+			err = surveyList(p)
+		case "Options...":
+			err = surveyEditor(p)
+		}
+		if !errors.Is(err, errContinue) {
+			break
+		}
 	}
 	return err
 }
@@ -174,4 +186,12 @@ func questOutputFile() (string, error) {
 		output = "-"
 	}
 	return output, nil
+}
+
+func surveyEditor(p *params) error {
+	ed := structedit.New(structedit.WithTag("json"))
+	if err := ed.Ask("Slackdump Configuration", &p.appCfg.Options); err != nil {
+		return err
+	}
+	return errContinue
 }

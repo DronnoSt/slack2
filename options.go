@@ -13,23 +13,23 @@ const defNumWorkers = 4 // default number of file downloaders. it's here because
 
 // Options is the option set for the Session.
 type Options struct {
-	DumpFiles           bool          // will we save the conversation files?
-	Workers             int           // number of file-saving workers
-	DownloadRetries     int           // if we get rate limited on file downloads, this is how many times we're going to retry
-	Tier2Boost          uint          // Tier-2 limiter boost
-	Tier2Burst          uint          // Tier-2 limiter burst
-	Tier2Retries        int           // Tier-2 retries when getting 429 on channels fetch
-	Tier3Boost          uint          // Tier-3 limiter boost allows to increase or decrease the slack Tier req/min rate.  Affects all tiers.
-	Tier3Burst          uint          // Tier-3 limiter burst allows to set the limiter burst in req/sec.  Default of 1 is safe.
-	Tier3Retries        int           // number of retries to do when getting 429 on conversation fetch
-	ConversationsPerReq int           // number of messages we get per 1 API request. bigger the number, less requests, but they become more beefy.
-	ChannelsPerReq      int           // number of channels to fetch per 1 API request.
-	RepliesPerReq       int           // number of thread replies per request (slack default: 1000)
-	UserCacheFilename   string        // user cache filename
-	MaxUserCacheAge     time.Duration // how long the user cache is valid for.
-	NoUserCache         bool          // disable fetching users from the API.
-	CacheDir            string        // cache directory
-	Logger              logger.Interface
+	DumpFiles           bool             `json:"dump_files,omitempty"`            // will we save the conversation files?
+	Workers             int              `json:"workers,omitempty"`               // number of file-saving workers
+	DownloadRetries     int              `json:"download_retries,omitempty"`      // if we get rate limited on file downloads, this is how many times we're going to retry
+	Tier2Boost          uint             `json:"tier_2_boost,omitempty"`          // Tier-2 limiter boost
+	Tier2Burst          uint             `json:"tier_2_burst,omitempty"`          // Tier-2 limiter burst
+	Tier2Retries        int              `json:"tier_2_retries,omitempty"`        // Tier-2 retries when getting 429 on channels fetch
+	Tier3Boost          uint             `json:"tier_3_boost,omitempty"`          // Tier-3 limiter boost allows to increase or decrease the slack Tier req/min rate.  Affects all tiers.
+	Tier3Burst          uint             `json:"tier_3_burst,omitempty"`          // Tier-3 limiter burst allows to set the limiter burst in req/sec.  Default of 1 is safe.
+	Tier3Retries        int              `json:"tier_3_retries,omitempty"`        // number of retries to do when getting 429 on conversation fetch
+	ConversationsPerReq int              `json:"conversations_per_req,omitempty"` // number of messages we get per 1 API request. bigger the number, less requests, but they become more beefy.
+	ChannelsPerReq      int              `json:"channels_per_req,omitempty"`      // number of channels to fetch per 1 API request.
+	RepliesPerReq       int              `json:"replies_per_req,omitempty"`       // number of thread replies per request (slack default: 1000)
+	UserCacheFilename   string           `json:"user_cache_filename,omitempty"`   // user cache filename
+	MaxUserCacheAge     time.Duration    `json:"max_user_cache_age,omitempty"`    // how long the user cache is valid for.
+	NoUserCache         bool             `json:"no_user_cache,omitempty"`         // disable fetching users from the API.
+	CacheDir            string           `json:"cache_dir,omitempty"`             // cache directory
+	Logger              logger.Interface `json:"logger,omitempty"`                // Logger, initialised by the caller
 }
 
 // DefOptions is the default options used when initialising slackdump instance.
