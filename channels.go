@@ -69,7 +69,6 @@ func (sd *Session) getChannels(ctx context.Context, chanTypes []string, cb func(
 				chans, nextcur, err = sd.client.GetConversationsContext(ctx, params)
 			})
 			return err
-
 		}); err != nil {
 			return err
 		}

@@ -216,3 +216,17 @@ func (sd *Session) l() logger.Interface {
 func (sd *Session) propagateLogger(l logger.Interface) {
 	network.Logger = l
 }
+
+// returnOrIgnore returns an error if sd.options.IgnoreErrors is true, and nil
+// otherwise.
+func (sd *Session) returnOrIgnore(caller string, err error) error {
+	if err == nil {
+		return nil
+	}
+	if sd.options.IgnoreErrors {
+		sd.l().Printf("%s: ignoring error: %s", caller, err)
+		return nil
+	} else {
+		return err
+	}
+}

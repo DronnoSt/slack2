@@ -29,7 +29,19 @@ type Options struct {
 	MaxUserCacheAge     time.Duration // how long the user cache is valid for.
 	NoUserCache         bool          // disable fetching users from the API.
 	CacheDir            string        // cache directory
-	Logger              logger.Interface
+
+	// error handling
+
+	// IgnoreErrors enables ignoring of critical errors - i.e. type
+	// conversion.  When enabled, up to ConversationsPerReq messages might be
+	// skipped if an error occurs.  Non-critical HTTP errors are retried
+	// automatically.
+	IgnoreErrors bool
+
+	// runtime handles
+
+	// Logger is the instance of a logger
+	Logger logger.Interface
 }
 
 // DefOptions is the default options used when initialising slackdump instance.
@@ -48,8 +60,12 @@ var DefOptions = Options{
 	RepliesPerReq:       200,           // the API-default is 1000 (see conversations.replies), but on large threads it may fail (see #54)
 	UserCacheFilename:   "users.cache", // seems logical
 	MaxUserCacheAge:     4 * time.Hour, // quick math:  that's 1/6th of a day, how's that, huh?
+	NoUserCache:         false,         // cache users by default
 	CacheDir:            ".",           // default cache dir
-	Logger:              logger.Default,
+
+	IgnoreErrors: false, // will fail on critical errors.
+
+	Logger: logger.Default,
 }
 
 // Option is the signature of the option-setting function.
