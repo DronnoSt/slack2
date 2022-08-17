@@ -3,6 +3,8 @@ package network
 import (
 	"context"
 	"fmt"
+	"path/filepath"
+	"runtime"
 	"runtime/trace"
 	"time"
 
@@ -47,14 +49,14 @@ func WithRetry(ctx context.Context, l *rate.Limiter, maxAttempts int, fn func() 
 			break
 		}
 
-		tracelogf(ctx, "error", "slackRetry: %s after %d attempts", cbErr, attempt+1)
-		var rle *slack.RateLimitedError
-		if !errors.As(cbErr, &rle) {
-			return fmt.Errorf("callback error: %w", cbErr)
+		tracelogf(ctx, "error", "%s: WithRetry: %s after %d attempts", caller(1), cbErr, attempt+1)
+		var rateErr *slack.RateLimitedError
+		if !errors.As(cbErr, &rateErr) {
+			return fmt.Errorf("%s: WithRetry: callback error: %w", caller(1), cbErr)
 		}
 
-		tracelogf(ctx, "info", "got rate limited, sleeping %s", rle.RetryAfter)
-		time.Sleep(rle.RetryAfter)
+		tracelogf(ctx, "info", "got rate limited, sleeping %s", rateErr.RetryAfter)
+		time.Sleep(rateErr.RetryAfter)
 	}
 	if !ok {
 		return ErrRetryFailed
@@ -72,4 +74,12 @@ func l() logger.Interface {
 		return logger.Default
 	}
 	return Logger
+}
+
+func caller(steps int) string {
+	name := "?"
+	if pc, _, _, ok := runtime.Caller(steps + 1); ok {
+		name = filepath.Base(runtime.FuncForPC(pc).Name())
+	}
+	return name
 }

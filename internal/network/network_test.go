@@ -2,6 +2,7 @@ package network
 
 import (
 	"context"
+	"strings"
 	"testing"
 	"time"
 
@@ -142,4 +143,16 @@ func Test_withRetry(t *testing.T) {
 			}
 		})
 	}
+}
+
+func Test_WithRetryCbError(t *testing.T) {
+	t.Run("error has proper caller", func(t *testing.T) {
+		got := WithRetry(context.Background(), rate.NewLimiter(1000, 1), 3, func() error {
+			return errors.New("cb err")
+		})
+		const want = "network.Test_WithRetryCbError.func1: WithRetry: callback error: cb err"
+		if !strings.EqualFold(got.Error(), want) {
+			t.Errorf("unexpected error: want=%s, got=%s", want, got)
+		}
+	})
 }
