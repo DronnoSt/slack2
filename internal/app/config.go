@@ -39,6 +39,7 @@ type Config struct {
 
 	ExportName string
 	ExportType export.ExportType
+	TeamName   string // team name, for mattermost exports
 
 	Options slackdump.Options
 }
@@ -102,6 +103,9 @@ var ErrNothingToDo = errors.New("no valid input and no list flags specified")
 func (p *Config) Validate() error {
 	if p.ExportName != "" {
 		// slack workspace export mode.
+		if p.ExportType == export.TMattermost && p.TeamName == "" {
+			return errors.New("team name is required for mattermost export type")
+		}
 		return nil
 	}
 

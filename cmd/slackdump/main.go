@@ -251,6 +251,7 @@ func parseCmdLine(args []string) (params, error) {
 	// - export
 	fs.StringVar(&p.appCfg.ExportName, "export", "", "`name` of the directory or zip file to export the Slack workspace to."+zipHint)
 	fs.Var(&p.appCfg.ExportType, "export-type", "set the export type: 'standard' or 'mattermost' (default: standard)")
+	fs.StringVar(&p.appCfg.TeamName, "export-team", "", "team name (for mattermost exports)")
 
 	// input-ouput options
 	fs.StringVar(&p.appCfg.Output.Filename, "o", "-", "Output `filename` for users and channels.\nUse '-' for the Standard Output.")
